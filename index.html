@@ -1,32 +1,37 @@
-const express = require('express');
-const fetch = require('node-fetch');
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Availability Checker</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <button onclick="checkWebsites()">Check Websites</button>
+    <ul id="results"></ul>
 
-const app = express();
+    <script>
+        function checkWebsites() {
+            const base_url = "http://arrrg.de";
+            const start_port = 40000;
+            const end_port = 40010; // Zum Beispiel nur 10 Ports für das Beispiel
 
-app.get('/checkAvailability', async (req, res) => {
-    const base_url = "http://arrrg.de";
-    const start_port = 40000;
-    const end_port = 41000;
+            const resultList = $('#results');
+            resultList.empty();
 
-    const results = [];
-    for (let port = start_port; port <= end_port; port++) {
-        const url = `${base_url}:${port}/`;
-        try {
-            const response = await fetch(url, { method: 'HEAD' });
-            if (response.ok) {
-                results.push(`${url} is available`);
-            } else {
-                results.push(`${url} responded with status: ${response.status}`);
+            for (let port = start_port; port <= end_port; port++) {
+                const url = `${base_url}:${port}/`;
+                $.ajax({
+                    url: url,
+                    type: 'HEAD',
+                    success: function () {
+                        resultList.append(`<li>${url} is available</li>`);
+                    },
+                    error: function () {
+                        resultList.append(`<li>${url} is not available</li>`);
+                    }
+                });
             }
-        } catch (error) {
-            results.push(`${url} is not available`);
         }
-    }
-
-    res.json(results);
-});
-
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+    </script>
+</body>
+</html>
