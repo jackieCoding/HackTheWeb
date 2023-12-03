@@ -1,1 +1,32 @@
-Magicmoehre
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Website Availability Checker</title>
+    <script>
+        function checkWebsiteAvailability() {
+            const base_url = "http://arrrg.de";
+            const start_port = 40000;
+            const end_port = 41000;
+
+            for (let port = start_port; port <= end_port; port++) {
+                const url = `${base_url}:${port}/`;
+                fetch(url, { method: 'HEAD' })
+                    .then(response => {
+                        if (response.ok) {
+                            console.log(`${url} is available`);
+                        } else {
+                            console.log(`${url} responded with status: ${response.status}`);
+                        }
+                    })
+                    .catch(error => {
+                        console.log(`${url} is not available`);
+                    });
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="checkWebsiteAvailability()">Check Website Availability</button>
+</body>
+</html>
